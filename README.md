@@ -57,7 +57,7 @@ stores all the config files needed for reproducing **Inductive Relation Predicti
 |--------------------|---------------------------------------------------------------------------------|-----------------|
 | **Aggregate Function** | Principal Neighborhood Aggregation(PNA)                                                                             | `-pna `           |
 |                    | Sum                                                                             | `-sum  `          |
-| **Message Function**   |  $\theta_r^{1}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) =  \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{W}_{r}^{(t)} \mathbf{z}_q $ | `-dep `           |
+| **Message Function**   |  $\theta_r^{1}(\mathbf{h}\_{w \mid u,q}^{(t)},\mathbf{z}\_q) =  \mathbf{h}\_{w \mid u,q}^{(t)} * \mathbf{W}\_{r}^{(t)} \mathbf{z}\_q $ | `-dep `           |
 |                    | $ \theta_r^{2}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{b}_r $              | `-indep  `        |
 |                    | $ \theta_r^{3}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} $         |` -rgcn `          |
 |                    | $ \theta_r^{4}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{z}_q $ | `-rgcn_query`     |
