@@ -51,12 +51,12 @@ All the configuration files can be found in `config/*/*.yaml`.
 
 
 `config/inductive/CMPNN-test/*.yaml`
-stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown below
+stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown below. 
 
 |                    | Model Choice                                                                    | Prefix in .yaml |
 |--------------------|---------------------------------------------------------------------------------|-----------------|
 | **Aggregate Function** | Principal Neighborhood Aggregation(PNA)                                                                             | `-pna `           |
-|                    | sum                                                                             | `-sum  `          |
+|                    | Sum                                                                             | `-sum  `          |
 | **Message Function**   |  $\theta_r^{1}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) =  \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{W}_{r}^{(t)} \mathbf{z}_q $ | `-dep `           |
 |                    | $ \theta_r^{2}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{b}_r $              | `-indep  `        |
 |                    | $ \theta_r^{3}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} $         |` -rgcn `          |
