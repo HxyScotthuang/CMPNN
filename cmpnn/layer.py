@@ -69,7 +69,7 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
         batch_size = len(graph.query)
         node_in, node_out, relation = graph.edge_list.t()
         if self.set_boundary:
-          boundary = graph.boundary.flatten(1)
+          boundary = graph.boundary
         else:
           boundary = input 
         node_input = input[node_in]
