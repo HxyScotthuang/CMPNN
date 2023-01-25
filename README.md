@@ -54,7 +54,18 @@ All the configuration files can be found in `config/*/*.yaml`.
 `config/inductive/CMPNN-test/*.yaml`
 stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown.
 
-For example, '-t' uses history function $f(t) = t$ and '-0' uses $f(t) = 0$. '-dep' corrosponds to $\theta_r^1$, '-indep' to $\theta_r^2$, '-rgcn' to $\theta_r^3$, and  '-rgcn_query' to $\theta_r^4$. PNA is pna, and SUM is sum
+|                    | Model Choice                                                                    | Prefix in .yaml |
+|--------------------|---------------------------------------------------------------------------------|-----------------|
+| **Aggregate Function** | Principal Neighborhood Aggregation(PNA)                                                                             | `-pna `           |
+|                    | sum                                                                             | `-sum  `          |
+| **Message Function**   |  $\theta_r^{1}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) =  \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{W}_{r}^{(t)} \mathbf{z}_q $ | `-dep `           |
+|                    | $ \theta_r^{2}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{b}_r $              | `-indep  `        |
+|                    | $ \theta_r^{3}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} $         |` -rgcn `          |
+|                    | $ \theta_r^{4}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{z}_q $ | `-rgcn_query`     |
+| **History Function**   | $f(t) = t$                                                                       | `-t`              |
+|                    | $f(t) = 0$                                                                        | `-0`              |
+
+
 
 
 ### Initialization ###
