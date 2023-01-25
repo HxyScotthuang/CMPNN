@@ -35,11 +35,12 @@ python script/run.py -c config/inductive/wn18rr.yaml --gpus [0] --version v1
 
 We provide the hyperparameters for each experiment in configuration files.
 All the configuration files can be found in `config/*/*.yaml`.
+In particular, 'config/inductive/CMPNN-test/*.yaml' store all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. For example, '-t' uses history function $f(t) = t$ and '-0' uses $f(t) = 0$. '-dep' corrosponds to $\theta_r^1$, '-indep' to $\theta_r^2$, '-rgcn' to $\theta_r^3$, and  '-rgcn_query' to $\theta_r^4$.
 
 For experiments on inductive relation prediction, you need to additionally specify
 the split version with `--version v1`.
 
-To run NBFNet with multiple GPUs or multiple machines, use the following commands
+To run C-MPNN with multiple GPUs or multiple machines, use the following commands
 
 ```bash
 python -m torch.distributed.launch --nproc_per_node=4 script/run.py -c config/inductive/wn18rr.yaml --gpus [0,1,2,3]
@@ -49,7 +50,6 @@ python -m torch.distributed.launch --nproc_per_node=4 script/run.py -c config/in
 python -m torch.distributed.launch --nnodes=4 --nproc_per_node=4 script/run.py -c config/inductive/wn18rr.yaml --gpus [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
 ```
 
-## Configuration File ##
 
 
 
