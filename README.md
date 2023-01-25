@@ -32,11 +32,6 @@ downloaded in the code.
 ```bash
 python script/run.py -c config/inductive/wn18rr.yaml --gpus [0] --version v1
 ```
-
-We provide the hyperparameters for each experiment in configuration files.
-All the configuration files can be found in `config/*/*.yaml`.
-In particular, 'config/inductive/CMPNN-test/*.yaml' store all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. For example, '-t' uses history function $f(t) = t$ and '-0' uses $f(t) = 0$. '-dep' corrosponds to $\theta_r^1$, '-indep' to $\theta_r^2$, '-rgcn' to $\theta_r^3$, and  '-rgcn_query' to $\theta_r^4$.
-
 For experiments on inductive relation prediction, you need to additionally specify
 the split version with `--version v1`.
 
@@ -50,7 +45,25 @@ python -m torch.distributed.launch --nproc_per_node=4 script/run.py -c config/in
 python -m torch.distributed.launch --nnodes=4 --nproc_per_node=4 script/run.py -c config/inductive/wn18rr.yaml --gpus [0,1,2,3,0,1,2,3,0,1,2,3,0,1,2,3]
 ```
 
+## Configuration ##
+We provide the hyperparameters for each experiment in configuration files.
+All the configuration files can be found in `config/*/*.yaml`.
+
+### Inductive Relation Prediction ###
+
+`config/inductive/CMPNN-test/*.yaml`
+stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown.
+
+For example, '-t' uses history function $f(t) = t$ and '-0' uses $f(t) = 0$. '-dep' corrosponds to $\theta_r^1$, '-indep' to $\theta_r^2$, '-rgcn' to $\theta_r^3$, and  '-rgcn_query' to $\theta_r^4$. PNA is pna, and SUM is sum
 
 
+### Initialization ###
+
+`config/inductive/Initialisation_test/*.yaml`
+stores all the config files for reproducing **Initialization Experiments**, with different initialization methods. 
+
+The naming and the corresponding model variation are shown.
+
+For initialization, we support 6 delta: AllZero(delta_0),Zero-One(delta_1), Query(delta_2), QueryWithNoise(delta_3),AllNoiseQuery(delta_4),RandomQuery(delta_5)
 
 
