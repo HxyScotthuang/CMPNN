@@ -49,7 +49,7 @@ python -m torch.distributed.launch --nnodes=4 --nproc_per_node=4 script/run.py -
 We provide the hyperparameters for each experiment in configuration files.
 All the configuration files can be found in `config/*/*.yaml`.
 
-
+### Inductive Relation Prediction Experiments ###
 `config/inductive/CMPNN-test/*.yaml`
 stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown below. 
 
