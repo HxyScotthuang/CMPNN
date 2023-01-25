@@ -58,9 +58,9 @@ stores all the config files needed for reproducing **Inductive Relation Predicti
 | **Aggregate Function** | Principal Neighborhood Aggregation(PNA)                                                                             | `-pna `           |
 |                    | Sum                                                                             | `-sum  `          |
 | **Message Function**   |  $\theta_r^{1}(\mathbf{h}\_{w \mid u,q}^{(t)},\mathbf{z}\_q) =  \mathbf{h}\_{w \mid u,q}^{(t)} * \mathbf{W}\_{r}^{(t)} \mathbf{z}\_q $ | `-dep `           |
-|                    | $ \theta_r^{2}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{b}_r $              | `-indep  `        |
-|                    | $ \theta_r^{3}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} $         |` -rgcn `          |
-|                    | $ \theta_r^{4}(\mathbf{h}_{w \mid u,q}^{(t)},\mathbf{z}_q) = \mathbf{W}_{r}^{(t)}\mathbf{h}_{w \mid u,q}^{(t)} * \mathbf{z}_q $ | `-rgcn_query`     |
+|                    | $\theta_r^{2}(\mathbf{h}\_{w \mid u,q}^{(t)},\mathbf{z}\_q) = \mathbf{h}\_{w \mid u,q}^{(t)} * \mathbf{b}\_r $              | `-indep  `        |
+|                    | $\theta_r^{3}(\mathbf{h}\_{w \mid u,q}^{(t)},\mathbf{z}\_q) = \mathbf{W}\_{r}^{(t)}\mathbf{h}\_{w \mid u,q}^{(t)} $         |` -rgcn `          |
+|                    | $\theta_r^{4}(\mathbf{h}\_{w \mid u,q}^{(t)},\mathbf{z}\_q) = \mathbf{W}\_{r}^{(t)}\mathbf{h}\_{w \mid u,q}^{(t)} * \mathbf{z}\_q $ | `-rgcn_query`     |
 | **History Function**   | $f(t) = t$                                                                       | `-t`              |
 |                    | $f(t) = 0$                                                                        | `-0`              |
 
@@ -75,11 +75,11 @@ The naming and the corresponding model variation are shown below.
 | Initialization | Formula                                                                   | Prefix in .yaml |
 |----------------|---------------------------------------------------------------------------|-----------------|
 | AllZero        | $\delta_0(u,v,q) = \mathbf{0}$                                            | `-0  `            |
-| Zero-One       | $\delta_1(u,v,q) = \mathbb{1}_{u = v} * \mathbf{1}$                       | `-0-1 `           |
-| Query          | $\delta_2(u,v,q) = \mathbb{1}_{u = v} * \mathbf{z}_q $                           |                 |
-| QueryWithNoise | $\delta_3(u,v,q)  = \mathbb{1}_{u = v} * (\mathbf{z}_q + \mathbf{\epsilon}_{u})$ | `-QueryWithNoise` |
-| AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}_{u = v} *\mathbf{z}_q) + \mathbf{\epsilon}_{u}$   | `-AllNoiseQuery`  |
-| RandomQuery    | $\delta_5(u,v,q) = \mathbb{1}_{u = v} * \mathbf{\epsilon}_{q} $           | `-rand-query `    |
+| Zero-One       | $\delta_1(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{1}$                       | `-0-1 `           |
+| Query          | $\delta_2(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{z}\_q $                           |                 |
+| QueryWithNoise | $\delta_3(u,v,q)  = \mathbb{1}\_{u = v} * (\mathbf{z}\_q + \mathbf{\epsilon}\_{u})$ | `-QueryWithNoise` |
+| AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}\_{u = v} *\mathbf{z}\_q) + \mathbf{\epsilon}\_{u}$   | `-AllNoiseQuery`  |
+| RandomQuery    | $\delta_5(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{\epsilon}\_{q} $           | `-rand-query `    |
 
 Note that the config file of **Query** are shown in previous **Inductive Relation Prediction Experiment**.
 
