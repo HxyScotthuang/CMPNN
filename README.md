@@ -76,9 +76,9 @@ The naming and the corresponding model variation are shown below.
 |----------------|---------------------------------------------------------------------------|-----------------|
 | AllZero        | $\delta_0(u,v,q) = \mathbf{0}$                                            | `-0  `            |
 | Zero-One       | $\delta_1(u,v,q) = \mathbb{1}_{u = v} * \mathbf{1}$                       | `-0-1 `           |
-| Query          | $\delta_2(u,v,q) = \mathbb{1}_{u = v} * \vz_q $                           |                 |
-| QueryWithNoise | $\delta_3(u,v,q)  = \mathbb{1}_{u = v} * (\vz_q + \mathbf{\epsilon}_{u})$ | `-QueryWithNoise` |
-| AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}_{u = v} *\vz_q) + \mathbf{\epsilon}_{u}$   | `-AllNoiseQuery`  |
+| Query          | $\delta_2(u,v,q) = \mathbb{1}_{u = v} * \mathbf{z}_q $                           |                 |
+| QueryWithNoise | $\delta_3(u,v,q)  = \mathbb{1}_{u = v} * (\mathbf{z}_q + \mathbf{\epsilon}_{u})$ | `-QueryWithNoise` |
+| AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}_{u = v} *\mathbf{z}_q) + \mathbf{\epsilon}_{u}$   | `-AllNoiseQuery`  |
 | RandomQuery    | $\delta_5(u,v,q) = \mathbb{1}_{u = v} * \mathbf{\epsilon}_{q} $           | `-rand-query `    |
 
 
