@@ -53,7 +53,7 @@ All the configuration files can be found in `config/*/*.yaml`.
 `config/inductive/CMPNN-test/*.yaml`
 stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown below. 
 
-|                    | Model Choice                                                                    | Prefix in .yaml |
+|                    | Model Instance Choice                                                                    | Prefix in .yaml |
 |--------------------|---------------------------------------------------------------------------------|-----------------|
 | **Aggregate Function** | Principal Neighborhood Aggregation(PNA)                                                                             | `-pna `           |
 |                    | Sum                                                                             | `-sum  `          |
