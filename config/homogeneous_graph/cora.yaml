@@ -7,11 +7,11 @@ dataset:
 task:
   class: LinkPrediction
   model:
-    class: NBFNet
+    class: CMPNN
     input_dim: 32
     hidden_dims: [32, 32, 32, 32, 32, 32]
     message_func: distmult
-    aggregate_func: pna
+    aggregate_func: sum
     short_cut: yes
     layer_norm: yes
     dependent: no
@@ -27,7 +27,7 @@ optimizer:
 
 engine:
   gpus: {{ gpus }}
-  batch_size: 64
+  batch_size: 16
 
 train:
   num_epoch: 20

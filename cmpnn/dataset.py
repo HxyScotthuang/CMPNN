@@ -26,7 +26,7 @@ class InductiveKnowledgeGraphDataset(data.KnowledgeGraphDataset):
                 reader = csv.reader(fin, delimiter="\t")
                 if verbose:
                     reader = tqdm(reader, "Loading %s" % txt_file, utils.get_line_count(txt_file))
-
+                # for train
                 num_sample = 0
                 for tokens in reader:
                     h_token, r_token, t_token = tokens
@@ -48,7 +48,7 @@ class InductiveKnowledgeGraphDataset(data.KnowledgeGraphDataset):
                 reader = csv.reader(fin, delimiter="\t")
                 if verbose:
                     reader = tqdm(reader, "Loading %s" % txt_file, utils.get_line_count(txt_file))
-
+                # for test
                 num_sample = 0
                 for tokens in reader:
                     h_token, r_token, t_token = tokens
@@ -63,7 +63,6 @@ class InductiveKnowledgeGraphDataset(data.KnowledgeGraphDataset):
                     triplets.append((h, t, r))
                     num_sample += 1
             num_samples.append(num_sample)
-
         train_entity_vocab, inv_train_entity_vocab = self._standarize_vocab(None, inv_train_entity_vocab)
         test_entity_vocab, inv_test_entity_vocab = self._standarize_vocab(None, inv_test_entity_vocab)
         relation_vocab, inv_relation_vocab = self._standarize_vocab(None, inv_relation_vocab)

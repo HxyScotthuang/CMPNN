@@ -1,7 +1,7 @@
-output_dir: ~/experiments/
+output_dir: /content/drive/MyDrive/Colab Notebooks/partC/NBFNet-Context/experiments
 
 dataset:
-  class: WN18RR
+  class: FB15k237
   path: ~/datasets/knowledge_graphs/
 
 task:
@@ -15,10 +15,12 @@ task:
     short_cut: yes
     layer_norm: yes
     dependent: no
+    set_boundary: no
+    remove_one_hop: yes
   criterion: bce
   num_negative: 32
   strict_negative: yes
-  adversarial_temperature: 1
+  adversarial_temperature: 0.5
   sample_weight: no
 
 optimizer:
@@ -27,7 +29,7 @@ optimizer:
 
 engine:
   gpus: {{ gpus }}
-  batch_size: 16
+  batch_size: 32
 
 train:
   num_epoch: 20

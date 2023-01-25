@@ -7,7 +7,7 @@ dataset:
 task:
   class: KnowledgeGraphCompletionOGB
   model:
-    class: NBFNet
+    class: CMPNN
     input_dim: 32
     hidden_dims: [32, 32, 32, 32, 32, 32]
     message_func: distmult

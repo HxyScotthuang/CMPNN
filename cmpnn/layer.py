@@ -1,12 +1,11 @@
 import torch
 from torch import nn
 from torch.nn import functional as F
-
+from torch.nn import Parameter
 from torch_scatter import scatter_add, scatter_mean, scatter_max, scatter_min
 
-from torchdrug import layers
+from torchdrug import layers,utils
 from torchdrug.layers import functional
-
 
 class GeneralizedRelationalConv(layers.MessagePassingBase):
 
@@ -18,7 +17,7 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
     }
 
     def __init__(self, input_dim, output_dim, num_relation, query_input_dim, message_func="distmult",
-                 aggregate_func="pna", layer_norm=False, activation="relu", dependent=True):
+                 aggregate_func="pna", layer_norm=False, activation="relu", dependent=True,set_boundary = False, rgcn = False,rgcn_with_query = False, num_bases = None):
         super(GeneralizedRelationalConv, self).__init__()
         self.input_dim = input_dim
         self.output_dim = output_dim
@@ -27,7 +26,10 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
         self.message_func = message_func
         self.aggregate_func = aggregate_func
         self.dependent = dependent
-
+        self.set_boundary = set_boundary
+        self.rgcn = rgcn
+        self.rgcn_with_query = rgcn_with_query
+        self.num_bases = num_bases
         if layer_norm:
             self.layer_norm = nn.LayerNorm(output_dim)
         else:
@@ -38,39 +40,67 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
             self.activation = activation
 
         if self.aggregate_func == "pna":
+            
             self.linear = nn.Linear(input_dim * 13, output_dim)
         else:
             self.linear = nn.Linear(input_dim * 2, output_dim)
-        if dependent:
-            self.relation_linear = nn.Linear(query_input_dim, num_relation * input_dim)
+        if (rgcn or rgcn_with_query):
+          # Message types 3 and 4
+          if num_bases is None:
+            self.weight = Parameter(torch.Tensor(num_relation, input_dim, input_dim))
+            torch.nn.init.xavier_uniform_(self.weight)
+          else:
+            self.weight = Parameter(torch.Tensor(num_bases, input_dim, input_dim))
+            self.comp = Parameter(torch.Tensor(num_relation, num_bases))
+            torch.nn.init.xavier_uniform_(self.weight)
+            torch.nn.init.xavier_uniform_(self.comp)
         else:
-            self.relation = nn.Embedding(num_relation, input_dim)
+          if dependent:
+              # Message types 1
+              self.relation_linear = nn.Linear(query_input_dim, num_relation * input_dim)
+          else:
+              # Message types 2
+              self.relation = nn.Embedding(num_relation, input_dim)
 
+          
+        
     def message(self, graph, input):
         assert graph.num_relation == self.num_relation
-
         batch_size = len(graph.query)
         node_in, node_out, relation = graph.edge_list.t()
-        if self.dependent:
-            relation_input = self.relation_linear(graph.query).view(batch_size, self.num_relation, self.input_dim)
+        if self.set_boundary:
+          boundary = graph.boundary.flatten(1)
         else:
-            relation_input = self.relation.weight.expand(batch_size, -1, -1)
-        relation_input = relation_input.transpose(0, 1)
+          boundary = input 
         node_input = input[node_in]
-        edge_input = relation_input[relation]
-
-        if self.message_func == "transe":
-            message = edge_input + node_input
-        elif self.message_func == "distmult":
-            message = edge_input * node_input
-        elif self.message_func == "rotate":
-            node_re, node_im = node_input.chunk(2, dim=-1)
-            edge_re, edge_im = edge_input.chunk(2, dim=-1)
-            message_re = node_re * edge_re - node_im * edge_im
-            message_im = node_re * edge_im + node_im * edge_re
-            message = torch.cat([message_re, message_im], dim=-1)
+        if self.rgcn or self.rgcn_with_query:
+          if self.num_bases is None:
+            weight = self.weight
+          else:
+            weight = (self.comp @ self.weight.view(self.num_bases, -1)).view(
+                  self.num_relation, self.input_dim, self.input_dim)
+          message = torch.bmm(node_input, weight[relation])
+          if self.rgcn_with_query:
+            message = message * graph.query
         else:
-            raise ValueError("Unknown message function `%s`" % self.message_func)
+          if self.dependent:
+            relation_input = self.relation_linear(graph.query).view(batch_size, self.num_relation, self.input_dim)
+          else:
+            relation_input = self.relation.weight.expand(batch_size, -1, -1)
+          relation_input = relation_input.transpose(0, 1)
+          edge_input = relation_input[relation]
+          if self.message_func == "transe":
+              message = edge_input + node_input
+          elif self.message_func == "distmult":
+              message = edge_input * node_input
+          elif self.message_func == "rotate":
+              node_re, node_im = node_input.chunk(2, dim=-1)
+              edge_re, edge_im = edge_input.chunk(2, dim=-1)
+              message_re = node_re * edge_re - node_im * edge_im
+              message_im = node_re * edge_im + node_im * edge_re
+              message = torch.cat([message_re, message_im], dim=-1)
+          else:
+              raise ValueError("Unknown message function `%s`" % self.message_func)
         message = torch.cat([message, graph.boundary])
 
         return message
@@ -106,15 +136,18 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
         return update
 
     def message_and_aggregate(self, graph, input):
-        if graph.requires_grad or self.message_func == "rotate":
+        if graph.requires_grad or self.message_func == "rotate" or self.rgcn or self.rgcn_with_query:
             return super(GeneralizedRelationalConv, self).message_and_aggregate(graph, input)
 
         assert graph.num_relation == self.num_relation
 
         batch_size = len(graph.query)
         input = input.flatten(1)
-        boundary = graph.boundary.flatten(1)
-
+        
+        if self.set_boundary:
+          boundary = graph.boundary.flatten(1)
+        else:
+          boundary = input # disable boundary but add input instead
         degree_out = graph.degree_out.unsqueeze(-1) + 1
         if self.dependent:
             relation_input = self.relation_linear(graph.query).view(batch_size, self.num_relation, self.input_dim)
@@ -122,17 +155,17 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
         else:
             relation_input = self.relation.weight.repeat(1, batch_size)
         adjacency = graph.adjacency.transpose(0, 1)
-
+        
         if self.message_func in self.message2mul:
             mul = self.message2mul[self.message_func]
         else:
             raise ValueError("Unknown message function `%s`" % self.message_func)
         if self.aggregate_func == "sum":
             update = functional.generalized_rspmm(adjacency, relation_input, input, sum="add", mul=mul)
-            update = update + boundary
+            update = update + boundary  
         elif self.aggregate_func == "mean":
             update = functional.generalized_rspmm(adjacency, relation_input, input, sum="add", mul=mul)
-            update = (update + boundary) / degree_out
+            update = (update + boundary) / degree_out 
         elif self.aggregate_func == "max":
             update = functional.generalized_rspmm(adjacency, relation_input, input, sum="max", mul=mul)
             update = torch.max(update, boundary)
@@ -156,11 +189,16 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
             raise ValueError("Unknown aggregation function `%s`" % self.aggregate_func)
 
         return update.view(len(update), batch_size, -1)
+      
+    
+        
 
     def combine(self, input, update):
         output = self.linear(torch.cat([input, update], dim=-1))
+        
         if self.layer_norm:
             output = self.layer_norm(output)
         if self.activation:
             output = self.activation(output)
         return output
+

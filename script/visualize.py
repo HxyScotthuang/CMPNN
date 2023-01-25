@@ -8,7 +8,7 @@ from torchdrug import core
 from torchdrug.utils import comm
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from nbfnet import dataset, layer, model, task, util
+from cmpnn import dataset, layer, model, task, util
 
 
 vocab_file = os.path.join(os.path.dirname(__file__), "../data/fb15k237_entity.txt")

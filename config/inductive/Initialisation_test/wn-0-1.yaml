@@ -1,11 +1,12 @@
 output_dir: ~/experiments/
 
 dataset:
-  class: WN18RR
+  class: WN18RRInductive
   path: ~/datasets/knowledge_graphs/
+  version: {{ version }}
 
 task:
-  class: KnowledgeGraphCompletion
+  class: InductiveKnowledgeGraphCompletion
   model:
     class: CMPNN
     input_dim: 32
@@ -14,7 +15,9 @@ task:
     aggregate_func: sum
     short_cut: yes
     layer_norm: yes
-    dependent: no
+    dependent: yes
+    set_boundary: no
+    initialization: Zero-One
   criterion: bce
   num_negative: 32
   strict_negative: yes
@@ -27,7 +30,7 @@ optimizer:
 
 engine:
   gpus: {{ gpus }}
-  batch_size: 16
+  batch_size: 8
 
 train:
   num_epoch: 20

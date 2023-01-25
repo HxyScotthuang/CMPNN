@@ -1,4 +1,4 @@
-output_dir: ~/experiments/
+output_dir: /content/drive/MyDrive/Colab Notebooks/partC/NBFNet-Context/experiments
 
 dataset:
   class: FB15k237
@@ -7,14 +7,15 @@ dataset:
 task:
   class: KnowledgeGraphCompletion
   model:
-    class: NBFNet
+    class: CMPNN
     input_dim: 32
     hidden_dims: [32, 32, 32, 32, 32, 32]
     message_func: distmult
-    aggregate_func: pna
+    aggregate_func: sum
     short_cut: yes
     layer_norm: yes
-    dependent: yes
+    dependent: no
+    set_boundary: yes
     remove_one_hop: yes
   criterion: bce
   num_negative: 32
@@ -28,7 +29,7 @@ optimizer:
 
 engine:
   gpus: {{ gpus }}
-  batch_size: 64
+  batch_size: 32
 
 train:
   num_epoch: 20

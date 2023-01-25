@@ -2,14 +2,14 @@ import os
 import sys
 import math
 import pprint
-
+import numpy as np
 import torch
 
 from torchdrug import core
 from torchdrug.utils import comm
 
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-from nbfnet import dataset, layer, model, task, util
+from cmpnn import dataset, layer, model, task, util
 
 
 def train_and_validate(cfg, solver):
@@ -44,11 +44,13 @@ def test(cfg, solver):
     solver.evaluate("test")
 
 
+
+
 if __name__ == "__main__":
     args, vars = util.parse_args()
     cfg = util.load_config(args.config, context=vars)
     working_dir = util.create_working_directory(cfg)
-
+    task = cfg.dataset["class"]
     torch.manual_seed(args.seed + comm.get_rank())
 
     logger = util.get_root_logger()
@@ -61,3 +63,4 @@ if __name__ == "__main__":
 
     train_and_validate(cfg, solver)
     test(cfg, solver)
+    

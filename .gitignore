@@ -10,3 +10,6 @@ __pycache__
 
 # macOS
 .DS_Store
+
+# Colab
+.ipynb_checkpoints

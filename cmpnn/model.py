@@ -9,18 +9,18 @@ from torch_scatter import scatter_add
 from torchdrug import core, layers, utils
 from torchdrug.layers import functional
 from torchdrug.core import Registry as R
-
+import networkx as nx
 from . import layer
 
 
-@R.register("model.NBFNet")
-class NeuralBellmanFordNetwork(nn.Module, core.Configurable):
+@R.register("model.CMPNN")
+class CMPNN(nn.Module, core.Configurable):
 
     def __init__(self, input_dim, hidden_dims, num_relation=None, symmetric=False,
                  message_func="distmult", aggregate_func="pna", short_cut=False, layer_norm=False, activation="relu",
                  concat_hidden=False, num_mlp_layer=2, dependent=True, remove_one_hop=False,
-                 num_beam=10, path_topk=10):
-        super(NeuralBellmanFordNetwork, self).__init__()
+                 num_beam=10, path_topk=10,set_boundary = True,rgcn = False,num_bases = None,rgcn_with_query = False, initialization = "Query"):
+        super(CMPNN, self).__init__()
 
         if not isinstance(hidden_dims, Sequence):
             hidden_dims = [hidden_dims]
@@ -29,6 +29,8 @@ class NeuralBellmanFordNetwork(nn.Module, core.Configurable):
         else:
             num_relation = int(num_relation)
             double_relation = num_relation * 2
+            
+        self.double_relation = double_relation
         self.dims = [input_dim] + list(hidden_dims)
         self.num_relation = num_relation
         self.symmetric = symmetric
@@ -37,16 +39,18 @@ class NeuralBellmanFordNetwork(nn.Module, core.Configurable):
         self.remove_one_hop = remove_one_hop
         self.num_beam = num_beam
         self.path_topk = path_topk
-
+        self.initialization = initialization
         self.layers = nn.ModuleList()
+        
         for i in range(len(self.dims) - 1):
             self.layers.append(layer.GeneralizedRelationalConv(self.dims[i], self.dims[i + 1], double_relation,
-                                                               self.dims[0], message_func, aggregate_func, layer_norm,
-                                                               activation, dependent))
-
+                                                              self.dims[0], message_func, aggregate_func, layer_norm,
+                                                              activation, dependent,rgcn,rgcn_with_query,num_bases))                                                        
+                                                                 
         feature_dim = hidden_dims[-1] * (len(hidden_dims) if concat_hidden else 1) + input_dim
         self.query = nn.Embedding(double_relation, input_dim)
         self.mlp = layers.MLP(feature_dim, [feature_dim] * (num_mlp_layer - 1) + [1])
+                                                               
 
     def remove_easy_edges(self, graph, h_index, t_index, r_index=None):
         if self.remove_one_hop:
@@ -91,34 +95,58 @@ class NeuralBellmanFordNetwork(nn.Module, core.Configurable):
         graph = type(graph)(edge_list, edge_weight=edge_weight, num_node=graph.num_node,
                             num_relation=1, meta_dict=graph.meta_dict, **graph.data_dict)
         return graph
+  
 
     @utils.cached
     def bellmanford(self, graph, h_index, r_index, separate_grad=False):
-        query = self.query(r_index)
+      # For initialization, we support 5 delta: AllZero(delta_0),Zero-One(delta_1), Query(delta_2), QueryWithNoise(delta_3),AllNoiseQuery(delta_4),RandomQuery(delta_5)
+        if self.initialization == "RandomQuery":
+          rand_query = nn.Embedding(self.double_relation, self.dims[0]).requires_grad_(False).to(self.device)
+          query = rand_query(r_index)
+        else:
+          query = self.query(r_index)
+        if self.initialization != "AllNoiseQuery":
+          boundary = torch.zeros(graph.num_node, *query.shape, device=self.device)
+        else:
+          boundary = torch.rand(graph.num_node, *query.shape, device=self.device)
+
+        # this h_index is the head
         index = h_index.unsqueeze(-1).expand_as(query)
-        boundary = torch.zeros(graph.num_node, *query.shape, device=self.device)
-        boundary.scatter_add_(0, index.unsqueeze(0), query.unsqueeze(0))
+        if self.initialization == "Zero-One":
+          one = torch.ones(*query.shape).to(self.device)
+          boundary.scatter_add_(0, index.unsqueeze(0), one.unsqueeze(0))
+        elif self.initialization in ["Query","AllNoiseQuery","RandomQuery"]:
+          boundary.scatter_add_(0, index.unsqueeze(0), query.unsqueeze(0))
+        elif self.initialization == "QueryWithNoise":
+          noise = torch.randn(*query.shape).to(self.device)
+          boundary.scatter_add_(0, index.unsqueeze(0), (torch.add(query, noise)).unsqueeze(0))
+        elif self.initialization == "AllZero":
+          pass
+        else:
+          raise NotImplementedError
+      
+        
         with graph.graph():
-            graph.query = query
+            graph.query = query 
         with graph.node():
             graph.boundary = boundary
-
+        
         hiddens = []
         step_graphs = []
+        
         layer_input = boundary
 
-        for layer in self.layers:
-            if separate_grad:
-                step_graph = graph.clone().requires_grad_()
-            else:
-                step_graph = graph
-            hidden = layer(step_graph, layer_input)
-            if self.short_cut and hidden.shape == layer_input.shape:
-                hidden = hidden + layer_input
-            hiddens.append(hidden)
-            step_graphs.append(step_graph)
-            layer_input = hidden
-
+        for index,layer in enumerate(self.layers):
+          if separate_grad:
+              step_graph = graph.clone().requires_grad_()
+          else:
+              step_graph = graph
+          hidden = layer(step_graph, layer_input)
+          if self.short_cut and hidden.shape == layer_input.shape:
+              hidden = hidden + layer_input
+          hiddens.append(hidden)
+          step_graphs.append(step_graph)
+          layer_input = hidden    
         node_query = query.expand(graph.num_node, -1, -1)
         if self.concat_hidden:
             output = torch.cat(hiddens + [node_query], dim=-1)
@@ -136,7 +164,7 @@ class NeuralBellmanFordNetwork(nn.Module, core.Configurable):
 
         shape = h_index.shape
         if graph.num_relation:
-            graph = graph.undirected(add_inverse=True)
+            graph = graph.undirected(add_inverse=True) # comment this for directed edge (undirected) CHANGE
             h_index, t_index, r_index = self.negative_sample_to_tail(h_index, t_index, r_index)
         else:
             graph = self.as_relational_graph(graph)

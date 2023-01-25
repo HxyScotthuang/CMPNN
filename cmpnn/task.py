@@ -265,6 +265,7 @@ class InductiveKnowledgeGraphCompletion(tasks.KnowledgeGraphCompletion, core.Con
                 t_pred = self.model(graph, h_index, t_index, r_index, all_loss=all_loss, metric=metric)
                 t_preds.append(t_pred)
             t_pred = torch.cat(t_preds, dim=-1)
+            
             for neg_index in all_index.split(self.num_negative):
                 r_index = pos_r_index.unsqueeze(-1).expand(-1, len(neg_index))
                 t_index, h_index = torch.meshgrid(pos_t_index, neg_index)
@@ -272,6 +273,7 @@ class InductiveKnowledgeGraphCompletion(tasks.KnowledgeGraphCompletion, core.Con
                 h_preds.append(h_pred)
             h_pred = torch.cat(h_preds, dim=-1)
             pred = torch.stack([t_pred, h_pred], dim=1)
+            
             # in case of GPU OOM
             pred = pred.cpu()
         else:
@@ -283,8 +285,10 @@ class InductiveKnowledgeGraphCompletion(tasks.KnowledgeGraphCompletion, core.Con
             h_index = pos_h_index.unsqueeze(-1).repeat(1, self.num_negative + 1)
             t_index = pos_t_index.unsqueeze(-1).repeat(1, self.num_negative + 1)
             r_index = pos_r_index.unsqueeze(-1).repeat(1, self.num_negative + 1)
+
             t_index[:batch_size // 2, 1:] = neg_index[:batch_size // 2]
             h_index[batch_size // 2:, 1:] = neg_index[batch_size // 2:]
+            
             pred = self.model(graph, h_index, t_index, r_index, all_loss=all_loss, metric=metric)
 
         return pred
@@ -302,7 +306,7 @@ class InductiveKnowledgeGraphCompletion(tasks.KnowledgeGraphCompletion, core.Con
         pos_index = functional._size_to_index(num_t_truth)
         t_mask = torch.ones(batch_size, graph.num_node, dtype=torch.bool, device=self.device)
         t_mask[pos_index, t_truth_index] = 0
-
+        
         pattern = torch.stack([any, pos_t_index, pos_r_index], dim=-1)
         edge_index, num_h_truth = graph.match(pattern)
         h_truth_index = graph.edge_list[edge_index, 0]
@@ -312,13 +316,12 @@ class InductiveKnowledgeGraphCompletion(tasks.KnowledgeGraphCompletion, core.Con
 
         mask = torch.stack([t_mask, h_mask], dim=1)
         target = torch.stack([pos_t_index, pos_h_index], dim=1)
-
+        
         # in case of GPU OOM
         return mask.cpu(), target.cpu()
 
     def evaluate(self, pred, target):
         mask, target = target
-
         pos_pred = pred.gather(-1, target.unsqueeze(-1))
         ranking = torch.sum((pos_pred <= pred) & mask, dim=-1) + 1
 

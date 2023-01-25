@@ -7,7 +7,7 @@ dataset:
 task:
   class: LinkPrediction
   model:
-    class: NBFNet
+    class: CMPNN
     input_dim: 32
     hidden_dims: [32, 32, 32, 32, 32, 32]
     message_func: distmult
@@ -27,7 +27,7 @@ optimizer:
 
 engine:
   gpus: {{ gpus }}
-  batch_size: 16
+  batch_size: 8
 
 train:
   num_epoch: 10
