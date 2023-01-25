@@ -1,6 +1,6 @@
 # A Theory of Link Prediction via Relational Weisfeiler-Leman #
 
-This is the official code base of the paper **A Theory of Link Prediction via Relational Weisfeiler-Leman** based on PyTorch and [TorchDrug], with implemented **Conditional Message Passing Neural Network(C-MPNN)**. It is largely based on the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet) , with mild modifications to accommodate all models studied in the paper.  Also, it supports training and inference with multiple GPUs or multiple machines. For further detail please refer to the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet). 
+This is the official code base of the paper **A Theory of Link Prediction via Relational Weisfeiler-Leman** based on PyTorch and [TorchDrug], with implemented **Conditional Message Passing Neural Network (C-MPNN)**. It is largely based on the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet) , with mild modifications to accommodate all models studied in the paper.  Also, it supports training and inference with multiple GPUs or multiple machines. For further detail please refer to the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet). 
 
 [TorchDrug]: https://github.com/DeepGraphLearning/torchdrug
 
