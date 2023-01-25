@@ -101,7 +101,7 @@ class GeneralizedRelationalConv(layers.MessagePassingBase):
               message = torch.cat([message_re, message_im], dim=-1)
           else:
               raise ValueError("Unknown message function `%s`" % self.message_func)
-        message = torch.cat([message, graph.boundary])
+        message = torch.cat([message, boundary])
 
         return message
 
