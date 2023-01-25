@@ -49,10 +49,9 @@ python -m torch.distributed.launch --nnodes=4 --nproc_per_node=4 script/run.py -
 We provide the hyperparameters for each experiment in configuration files.
 All the configuration files can be found in `config/*/*.yaml`.
 
-### Inductive Relation Prediction ###
 
 `config/inductive/CMPNN-test/*.yaml`
-stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown.
+stores all the config files needed for reproducing **Inductive Relation Prediction Experiments**, with different model instances labelled in the files. The naming and the corresponding model variation are shown below
 
 |                    | Model Choice                                                                    | Prefix in .yaml |
 |--------------------|---------------------------------------------------------------------------------|-----------------|
@@ -66,15 +65,21 @@ stores all the config files needed for reproducing **Inductive Relation Predicti
 |                    | $f(t) = 0$                                                                        | `-0`              |
 
 
-
-
 ### Initialization ###
 
 `config/inductive/Initialisation_test/*.yaml`
-stores all the config files for reproducing **Initialization Experiments**, with different initialization methods. 
+stores all the config files for reproducing **Initialization Experiments**, with different initialization methods. Note that the config file of *Query* are shown in previous *Inductive Relation Prediction Experiment*.
 
-The naming and the corresponding model variation are shown.
+The naming and the corresponding model variation are shown below.
 
-For initialization, we support 6 delta: AllZero(delta_0),Zero-One(delta_1), Query(delta_2), QueryWithNoise(delta_3),AllNoiseQuery(delta_4),RandomQuery(delta_5)
+| Initialization | Formula                                                                   | Prefix in .yaml |
+|----------------|---------------------------------------------------------------------------|-----------------|
+| AllZero        | $\delta_0(u,v,q) = \mathbf{0}$                                            | `-0  `            |
+| Zero-One       | $\delta_1(u,v,q) = \mathbb{1}_{u = v} * \mathbf{1}$                       | `-0-1 `           |
+| Query          | $\delta_2(u,v,q) = \mathbb{1}_{u = v} * \vz_q $                           |                 |
+| QueryWithNoise | $\delta_3(u,v,q)  = \mathbb{1}_{u = v} * (\vz_q + \mathbf{\epsilon}_{u})$ | `-QueryWithNoise` |
+| AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}_{u = v} *\vz_q) + \mathbf{\epsilon}_{u}$   | `-AllNoiseQuery`  |
+| RandomQuery    | $\delta_5(u,v,q) = \mathbb{1}_{u = v} * \mathbf{\epsilon}_{q} $           | `-rand-query `    |
+
 
 
