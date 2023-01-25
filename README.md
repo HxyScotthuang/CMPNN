@@ -65,7 +65,7 @@ stores all the config files needed for reproducing **Inductive Relation Predicti
 |                    | $f(t) = 0$                                                                        | `-0`              |
 
 
-### Initialization ###
+### Initialization Experiments ###
 
 `config/inductive/Initialisation_test/*.yaml`
 stores all the config files for reproducing **Initialization Experiments**, with different initialization methods. 
