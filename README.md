@@ -68,7 +68,7 @@ stores all the config files needed for reproducing **Inductive Relation Predicti
 ### Initialization ###
 
 `config/inductive/Initialisation_test/*.yaml`
-stores all the config files for reproducing **Initialization Experiments**, with different initialization methods. Note that the config file of *Query* are shown in previous *Inductive Relation Prediction Experiment*.
+stores all the config files for reproducing **Initialization Experiments**, with different initialization methods. 
 
 The naming and the corresponding model variation are shown below.
 
@@ -81,5 +81,5 @@ The naming and the corresponding model variation are shown below.
 | AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}_{u = v} *\mathbf{z}_q) + \mathbf{\epsilon}_{u}$   | `-AllNoiseQuery`  |
 | RandomQuery    | $\delta_5(u,v,q) = \mathbb{1}_{u = v} * \mathbf{\epsilon}_{q} $           | `-rand-query `    |
 
-
+Note that the config file of **Query** are shown in previous **Inductive Relation Prediction Experiment**.
 
