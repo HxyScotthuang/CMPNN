@@ -78,8 +78,8 @@ The naming and the corresponding model variation are shown below.
 | Zero-One       | $\delta_1(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{1}$                       | `-0-1 `           |
 | Query          | $\delta_2(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{z}\_q $                           |                 |
 | QueryWithNoise | $\delta_3(u,v,q)  = \mathbb{1}\_{u = v} * (\mathbf{z}\_q + \mathbf{\epsilon}\_{u})$ | `-QueryWithNoise` |
-| AllNoiseQuery  | $\delta_4(u,v,q) = (\mathbb{1}\_{u = v} *\mathbf{z}\_q) + \mathbf{\epsilon}\_{u}$   | `-AllNoiseQuery`  |
-| RandomQuery    | $\delta_5(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{\epsilon}\_{q} $           | `-rand-query `    |
+| RandomQuery    | $\delta_4(u,v,q) = \mathbb{1}\_{u = v} * \mathbf{\epsilon}\_{q} $           | `-rand-query `    |
+| AllNoiseQuery  | $\delta_5(u,v,q) = (\mathbb{1}\_{u = v} *\mathbf{z}\_q) + \mathbf{\epsilon}\_{u}$   | `-AllNoiseQuery`  |
 
 Note that the config file of **Query** are shown in previous **Inductive Relation Prediction Experiment**.
 
