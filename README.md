@@ -83,4 +83,4 @@ The naming and the corresponding model variation are shown below.
 
 Note that the config file of **Query** are shown in previous **Inductive Relation Prediction Experiment**.
 
-\* : In **RandomQuery** we also change learnable query vector $\mathbf{z}\_q$ to a random vector $\mathbf{\epsilon}\_{q}$, which might affect $\theta_r^1$.
+\* : In **RandomQuery** we also change learnable query vector $\mathbf{z}\_q$ to a random vector $\mathbf{\epsilon}\_{q}$, which might affect $\theta_r^1$ and $\theta_r^4$.
