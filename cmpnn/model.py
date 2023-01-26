@@ -99,7 +99,7 @@ class CMPNN(nn.Module, core.Configurable):
 
     @utils.cached
     def bellmanford(self, graph, h_index, r_index, separate_grad=False):
-      # For initialization, we support 6 delta: AllZero(delta_0),Zero-One(delta_1), Query(delta_2), QueryWithNoise(delta_3),AllNoiseQuery(delta_4),RandomQuery(delta_5)
+      # For initialization, we support 6 delta: AllZero(delta_0),Zero-One(delta_1), Query(delta_2), QueryWithNoise(delta_3),RandomQuery(delta_4),AllNoiseQuery(delta_5),
         if self.initialization == "RandomQuery":
           rand_query = nn.Embedding(self.double_relation, self.dims[0]).requires_grad_(False).to(self.device)
           query = rand_query(r_index)
