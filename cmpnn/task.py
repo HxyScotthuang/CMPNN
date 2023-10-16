@@ -467,6 +467,7 @@ class InductiveKnowledgeGraphCompletion(
         return metric
 
 
+
 @R.register("KnowledgeGraphCompletionOGB")
 class KnowledgeGraphCompletionOGB(tasks.KnowledgeGraphCompletion, core.Configurable):
     def __init__(

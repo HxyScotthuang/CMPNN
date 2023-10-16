@@ -1,4 +1,4 @@
-output_dir: /content/drive/MyDrive/Colab Notebooks/partC/NBFNet-Context/experiments
+output_dir: ～/experiments
 
 dataset:
   class: FB15k237
