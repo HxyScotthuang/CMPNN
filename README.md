@@ -1,6 +1,6 @@
-# A Theory of Link Prediction via Relational Weisfeiler-Leman on Knowledge Graph #
+# A Theory of Link Prediction via Relational Weisfeiler-Leman on Knowledge Graphs #
 
-This is the official code base of the NeurIPS 2023 paper **A Theory of Link Prediction via Relational Weisfeiler-Leman on Knowledge Graph** [(ArXiv)](https://arxiv.org/abs/2302.02209) based on PyTorch and [TorchDrug], with implemented **Conditional Message Passing Neural Network (C-MPNN)**. It is largely based on the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet) , with mild modifications to accommodate all models studied in the paper.  Also, it supports training and inference with multiple GPUs or multiple machines. 
+This is the official code base of the NeurIPS 2023 paper **A Theory of Link Prediction via Relational Weisfeiler-Leman on Knowledge Graphs** [(ArXiv)](https://arxiv.org/abs/2302.02209) based on PyTorch and [TorchDrug], with implemented **Conditional Message Passing Neural Network (C-MPNN)**. It is largely based on the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet) , with mild modifications to accommodate all models studied in the paper.  Also, it supports training and inference with multiple GPUs or multiple machines. 
 
 [TorchDrug]: https://github.com/DeepGraphLearning/torchdrug
 
