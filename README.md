@@ -90,13 +90,4 @@ The key and acceptable values in the config file:
 
 For further details please refer to the [NBFNet code base](https://github.com/DeepGraphLearning/NBFNet). 
 
-```bibtex
-@inproceedings{
-huang2023a,
-title={A Theory of Link Prediction via Relational Weisfeiler-Leman on Knowledge Graphs},
-author={Xingyue Huang and Miguel Romero Orth and Ismail Ilkan Ceylan and Pablo Barcelo},
-booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
-year={2023},
-url={https://openreview.net/forum?id=7hLlZNrkt5}
-}
-```
+
