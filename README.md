@@ -96,8 +96,7 @@ huang2023a,
 title={A Theory of Link Prediction via Relational Weisfeiler-Leman on Knowledge Graphs},
 author={Xingyue Huang and Miguel Romero Orth and İsmail İlkan Ceylan and Pablo Barceló},
 booktitle={Thirty-seventh Conference on Neural Information Processing Systems},
-year={2023},
-url={https://openreview.net/forum?id=7hLlZNrkt5}
+year={2023}
 }
 
 ```
